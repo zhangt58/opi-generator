@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display version="2.0.0">
+  <background_color>
+    <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
+  </background_color>
+  <grid_visible>true</grid_visible>
+  <height>800</height>
+  <name>XYPlot Example</name>
+  <width>1200</width>
+  <x>0</x>
+  <y>0</y>
+  <widget type="textupdate" version="2.0.0">
+    <height>25</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>TextUpdate_0</name>
+    <pv_name>sim://sine(-5, 5, 500, 0.01)</pv_name>
+    <vertical_alignment>1</vertical_alignment>
+    <width>100</width>
+    <x>5</x>
+    <y>5</y>
+  </widget>
+  <widget type="rectangle" version="2.0.0">
+    <height>50</height>
+    <name>Rectangle_0</name>
+    <scripts>
+      <script file="EmbeddedPy">
+        <text><![CDATA["""Script that will be embedded into the XML .opi and .bob files."""
+
+from org.csstudio.opibuilder.scriptUtil import PVUtil
+
+# Gets the value of the first PV
+pv_value = PVUtil.getDouble(pvs[0])
+
+widget.setPropertyValue("x", pv_value * 10 + 55)
+widget.setPropertyValue("width", pv_value * 10 + 55)
+widget.setPropertyValue("height", -pv_value * 10 + 55)
+]]></text>
+        <pv_name trigger="true">sim://sine(-5, 5, 500, 0.01)</pv_name>
+      </script>
+    </scripts>
+    <width>50</width>
+    <x>5</x>
+    <y>35</y>
+  </widget>
+</display>

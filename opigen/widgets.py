@@ -327,15 +327,19 @@ class ActionWidget(Widget):
     def add_exit(self):
         self.actions.add_action(actions.Exit())
 
-    def set_basic_style(self, style):
-        # does not work well
-        if style == BasicStyle.CLASSIC:
+    def set_style(self, style: str):
+        # does not work well, WIP
+        if style == BasicStyle.CLASSIC: # match CS-Studio
             self.alarm_pulsing = False
             self.backcolor_alarm_sensitive = False
             self.set_bg_color(
                 Color((218, 218, 218), 'ControlAndButtons Background'))
             self.style = style
-        else:  # NATIVE
+        else:  # NATIVE (Phoebus default)
+            self.alarm_pulsing = False
+            self.backcolor_alarm_sensitive = False
+            self.set_bg_color(
+                Color((210, 210, 210), 'ButtonBackground'))
             self.style = style
 
 
@@ -636,12 +640,12 @@ class TextUpdate(Widget):
         self.vertical_alignment = VAlign.MIDDLE
 
 
-class TextEntry(Widget):
+class TextEntry(ActionWidget):
 
     TYPE_ID = 'org.csstudio.opibuilder.widgets.TextInput'
     TYPE = 'textentry'
 
-    def __init__(self, x, y, width, height, pv, style=None):
+    def __init__(self, x, y, width, height, pv, style: str = None):
         super(TextEntry, self).__init__(TextEntry.TYPE_ID, x, y, width, height)
 
         self.pv_name = pv
@@ -649,7 +653,18 @@ class TextEntry(Widget):
         self.vertical_alignment = VAlign.MIDDLE
         #
         if style is not None:
-            self.set_basic_style(style)
+            self.set_style(style)
+
+    def set_style(self, style: str):
+        if style == BasicStyle.CLASSIC: # match CS-Studio
+            self.alarm_pulsing = False
+            self.backcolor_alarm_sensitive = False
+            self.set_bg_color(
+                Color((236, 240, 241), 'TEXTENTRY_BG'))
+            self.style = style
+        else:  # NATIVE (Phoebus default)
+            self.style = style
+
 
 class Spinner(Widget):
 
@@ -760,7 +775,7 @@ class ActionButton(ActionWidget):
 
         self.text = text
         if style is not None:
-            self.set_basic_style(style)
+            self.set_style(style)
         self.border_alarm_sensitive = False
 
 

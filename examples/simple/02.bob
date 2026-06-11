@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display version="2.0.0">
+  <grid_visible>true</grid_visible>
+  <height>600</height>
+  <name>display</name>
+  <width>800</width>
+  <x>0</x>
+  <y>0</y>
+  <widget type="rectangle" version="2.0.0">
+    <background_color>
+      <color red="255" green="255" blue="255" name="White"/>
+    </background_color>
+    <foreground_color>
+      <color red="96" green="96" blue="0" name="Yellow LED: Off"/>
+    </foreground_color>
+    <height>500</height>
+    <name>Rectangle_0</name>
+    <width>700</width>
+    <x>5</x>
+    <y>5</y>
+  </widget>
+  <widget type="group" version="2.0.0">
+    <height>400</height>
+    <name>Group</name>
+    <rules>
+      <rule prop_id="visible" name="GreaterThanRule" out_exp="false">
+        <pv trig="true">loc://visible(100)</pv>
+        <exp bool_exp="pv0 &gt; 300">
+          <value>true</value>
+        </exp>
+        <exp bool_exp="true">
+          <value>false</value>
+        </exp>
+      </rule>
+    </rules>
+    <transparent>true</transparent>
+    <width>600</width>
+    <x>20</x>
+    <y>20</y>
+    <widget type="action_button" version="3.0.0">
+      <actions>
+        <action type="write_pv">
+          <pv_name>loc://greeting</pv_name>
+          <description></description>
+          <value>opigen</value>
+        </action>
+      </actions>
+      <border_alarm_sensitive>false</border_alarm_sensitive>
+      <height>24</height>
+      <name>ActionButton_0</name>
+      <text>hello</text>
+      <width>60</width>
+      <x>30</x>
+      <y>30</y>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <actions>
+        <action type="command">
+          <command>ls</command>
+          <description></description>
+        </action>
+      </actions>
+      <border_alarm_sensitive>false</border_alarm_sensitive>
+      <height>24</height>
+      <name>ActionButton_1</name>
+      <text>ls</text>
+      <width>60</width>
+      <x>30</x>
+      <y>60</y>
+    </widget>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <font>
+      <font family="Liberation Sans" size="12" style="REGULAR">Fine Print</font>
+    </font>
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Label_0</name>
+    <rules>
+      <rule prop_id="text" name="Update Text" out_exp="true">
+        <pv_name>loc://greeting</pv_name>
+        <exp bool_exp="true">
+          <expression>pvStr0</expression>
+        </exp>
+      </rule>
+    </rules>
+    <text>Label</text>
+    <vertical_alignment>1</vertical_alignment>
+    <width>200</width>
+    <x>100</x>
+    <y>450</y>
+  </widget>
+</display>

@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display version="2.0.0">
+  <background_color>
+    <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
+  </background_color>
+  <grid_visible>true</grid_visible>
+  <height>600</height>
+  <name>Rule Example</name>
+  <width>800</width>
+  <x>0</x>
+  <y>0</y>
+  <widget type="textupdate" version="2.0.0">
+    <background_color>
+      <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_width>0</border_width>
+    <border_color>
+      <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
+    </border_color>
+    <font>
+      <font family="Liberation Sans" size="18" style="REGULAR">Default</font>
+    </font>
+    <height>20</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>TextUpdate_0</name>
+    <pv_name>sim://flipflop(1)</pv_name>
+    <rules>
+      <rule prop_id="background_color" name="Change background color" out_exp="false">
+        <pv_name>sim://flipflop(1)</pv_name>
+        <pv_name trigger="false">loc://dummy_pv(1)</pv_name>
+        <exp bool_exp="pv0 == 1">
+          <value>
+            <color red="0" green="255" blue="0" name="Green"/>
+          </value>
+        </exp>
+        <exp bool_exp="pv0 == 0">
+          <value>
+            <color red="255" green="0" blue="0" name="Red"/>
+          </value>
+        </exp>
+        <exp bool_exp="true">
+          <value>
+            <color red="255" green="255" blue="255" name="White"/>
+          </value>
+        </exp>
+      </rule>
+    </rules>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <width>50</width>
+    <x>5</x>
+    <y>5</y>
+  </widget>
+</display>

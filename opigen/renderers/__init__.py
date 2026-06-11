@@ -7,7 +7,7 @@ from .phoebus.render import get_opi_renderer as get_bob_renderer
 class Renderer:
 
     def __init__(self, display, auto_resize: bool = False, **kws):
-        if auto_resize:
+        if auto_resize and hasattr(display, "set_opt_size"):
             display.set_opt_size(**kws)
         self._bob_renderer = get_bob_renderer(display)
         self._opi_renderer = get_opi_renderer(display)

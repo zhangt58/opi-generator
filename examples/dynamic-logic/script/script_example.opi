@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
+  <background_color>
+    <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
+  </background_color>
+  <height>800</height>
+  <name>XYPlot Example</name>
+  <show_grid>true</show_grid>
+  <transparent>false</transparent>
+  <version>2.0.0</version>
+  <width>1200</width>
+  <x>0</x>
+  <y>0</y>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <height>25</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>TextUpdate_0</name>
+    <pv_name>sim://sine(-5, 5, 500, 0.01)</pv_name>
+    <version>2.0.0</version>
+    <vertical_alignment>1</vertical_alignment>
+    <width>100</width>
+    <x>5</x>
+    <y>5</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Rectangle" version="1.0.0">
+    <height>50</height>
+    <name>Rectangle_0</name>
+    <scripts>
+      <path pathString="EmbeddedPy" checkConnect="true" sfe="false" seoe="false">
+        <scriptName>Rectangle Changing Script</scriptName>
+        <scriptText><![CDATA["""Script that will be embedded into the XML .opi and .bob files."""
+
+from org.csstudio.opibuilder.scriptUtil import PVUtil
+
+# Gets the value of the first PV
+pv_value = PVUtil.getDouble(pvs[0])
+
+widget.setPropertyValue("x", pv_value * 10 + 55)
+widget.setPropertyValue("width", pv_value * 10 + 55)
+widget.setPropertyValue("height", -pv_value * 10 + 55)
+]]></scriptText>
+        <pv trig="True">sim://sine(-5, 5, 500, 0.01)</pv>
+      </path>
+    </scripts>
+    <version>2.0.0</version>
+    <width>50</width>
+    <x>5</x>
+    <y>35</y>
+  </widget>
+</display>

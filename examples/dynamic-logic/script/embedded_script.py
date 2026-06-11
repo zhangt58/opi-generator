@@ -1,3 +1,4 @@
+# flake8: noqa
 """Script that will be embedded into the XML .opi and .bob files."""
 
 from org.csstudio.opibuilder.scriptUtil import PVUtil

@@ -4,7 +4,7 @@
 # Phoebus (.bob) only support px
 #
 # Name           Family             Style     size (boy), size (phoebus)
-Title          = Liberation Serif - bold    - 24 pt, 28
+Title          = Liberation Sans - bold    - 24 pt, 28
 Huge           = Liberation Sans  - bold    - 24 pt, 28
 Header 1       = Liberation Sans  - bold    - 22 pt, 25
 Header 2       = Liberation Sans  - bold    - 20 pt, 23

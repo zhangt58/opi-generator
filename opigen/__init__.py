@@ -12,10 +12,13 @@ parse_font_file(get_font_def_path())
 parse_color_file(get_color_def_path())
 
 # predefined colors
-from . import colors
-ALARM_COLORS = {
-    'invalid': colors.WISTERIA,
-    'normal': colors.EMERALD,
-    'minor': colors.CARROT,
-    'major': colors.ALIZARIN,
-}
+try:
+    from . import colors
+    ALARM_COLORS = {
+        'invalid': colors.WISTERIA,
+        'normal': colors.EMERALD,
+        'minor': colors.CARROT,
+        'major': colors.ALIZARIN,
+    }
+except Exception:
+    ALARM_COLORS = None

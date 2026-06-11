@@ -95,6 +95,7 @@ on_label = "on_label"
 off_label = "off_label"
 bit = "bit"
 square = "square"
+line_color = "line_color"
 
 [MultiStateLed]
 square = "square"

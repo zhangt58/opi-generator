@@ -80,7 +80,8 @@ class OpiRule:
 
         # extra PVs
         for i_pv, i_trig in rule_model._extra_pvs:
-            _extra_pv_node = et.SubElement(self.rule_node, 'pv_name').text = i_pv
+            _extra_pv_node = et.SubElement(self.rule_node, 'pv_name')
+            _extra_pv_node.text = i_pv
             if not i_trig:
                 _extra_pv_node.set('trigger', 'false')
         #

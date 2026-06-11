@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display version="2.0.0">
+  <background_color>
+    <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
+  </background_color>
+  <grid_visible>true</grid_visible>
+  <height>600</height>
+  <name>display</name>
+  <width>800</width>
+  <x>0</x>
+  <y>0</y>
+  <widget type="action_button" version="3.0.0">
+    <background_color>
+      <color red="218" green="218" blue="218" name="ControlAndButtons Background"/>
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <height>40</height>
+    <name>ActionButton_0</name>
+    <text>Classic</text>
+    <transparent>false</transparent>
+    <width>100</width>
+    <x>100</x>
+    <y>100</y>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <background_color>
+      <color red="210" green="210" blue="210" name="ButtonBackground"/>
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <height>40</height>
+    <name>ActionButton_1</name>
+    <text>Native</text>
+    <transparent>false</transparent>
+    <width>100</width>
+    <x>100</x>
+    <y>200</y>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <height>40</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>TextEntry_0</name>
+    <pv_name>loc://x(0)</pv_name>
+    <vertical_alignment>1</vertical_alignment>
+    <width>100</width>
+    <x>100</x>
+    <y>300</y>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <background_color>
+      <color red="236" green="240" blue="241" name="TEXTENTRY_BG"/>
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <font>
+      <font family="Liberation Sans" size="18" style="REGULAR">Default</font>
+    </font>
+    <height>40</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>TextEntry_1</name>
+    <pv_name>loc://y(0)</pv_name>
+    <vertical_alignment>1</vertical_alignment>
+    <width>100</width>
+    <x>100</x>
+    <y>400</y>
+  </widget>
+</display>

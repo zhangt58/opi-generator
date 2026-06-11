@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<display version="2.0.0">
+  <background_color>
+    <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
+  </background_color>
+  <grid_visible>true</grid_visible>
+  <height>600</height>
+  <name>Script Example</name>
+  <width>800</width>
+  <x>0</x>
+  <y>0</y>
+  <widget type="textupdate" version="2.0.0">
+    <background_color>
+      <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_width>0</border_width>
+    <border_color>
+      <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
+    </border_color>
+    <font>
+      <font family="Liberation Sans" size="18" style="REGULAR">Default</font>
+    </font>
+    <height>20</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>TextUpdate_1</name>
+    <pv_name>sim://flipflop(1)</pv_name>
+    <scripts>
+      <script file="EmbeddedPy">
+        <text><![CDATA[
+from org.csstudio.display.builder.runtime.script import PVUtil
+from org.csstudio.display.builder.model.properties import WidgetColor
+
+v = PVUtil.getDouble(pvs[0])
+color = None
+if v == 1.0:
+    color = WidgetColor(0, 255, 0, 255) # Green
+elif v == 0.0:
+    color = WidgetColor(255, 0, 0, 255) # Red
+if color is not None:
+    widget.setPropertyValue("background_color", color)
+]]></text>
+        <pv_name trigger="true">sim://flipflop(1)</pv_name>
+      </script>
+    </scripts>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <width>50</width>
+    <x>5</x>
+    <y>5</y>
+  </widget>
+</display>

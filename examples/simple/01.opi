@@ -1,101 +1,130 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<display version="2.0.0">
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <background_color>
     <color red="255" green="255" blue="255" name="DISPLAY_BG"/>
   </background_color>
-  <grid_visible>true</grid_visible>
   <height>600</height>
   <name>BPM Readings</name>
+  <show_grid>true</show_grid>
+  <transparent>false</transparent>
+  <version>2.0.0</version>
   <width>800</width>
   <x>0</x>
   <y>0</y>
-  <widget type="label" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <height>25</height>
     <horizontal_alignment>0</horizontal_alignment>
     <name>Label_0</name>
     <text>LS1_CA01:BPM_D1129</text>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>200</width>
     <x>5</x>
     <y>5</y>
   </widget>
-  <widget type="textupdate" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <background_color>
       <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
     </background_color>
     <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_width>0</border_width>
+    <border_style>0</border_style>
     <border_color>
       <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
     </border_color>
+    <font>
+      <fontdata fontName="Liberation Sans" height="13" style="0" pixels="false">Default</fontdata>
+    </font>
     <height>25</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>TextUpdate_0</name>
     <pv_name>VA:LS1_CA01:BPM_D1129:X_RD</pv_name>
+    <transparent>false</transparent>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>60</width>
     <x>210</x>
     <y>5</y>
   </widget>
-  <widget type="textupdate" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <background_color>
       <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
     </background_color>
     <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_width>0</border_width>
+    <border_style>0</border_style>
     <border_color>
       <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
     </border_color>
+    <font>
+      <fontdata fontName="Liberation Sans" height="13" style="0" pixels="false">Default</fontdata>
+    </font>
     <height>25</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>TextUpdate_1</name>
     <pv_name>VA:LS1_CA01:BPM_D1129:Y_RD</pv_name>
+    <transparent>false</transparent>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>60</width>
     <x>275</x>
     <y>5</y>
   </widget>
-  <widget type="label" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <height>25</height>
     <horizontal_alignment>0</horizontal_alignment>
     <name>Label_1</name>
     <text>LS1_CA01:BPM_D1144</text>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>200</width>
     <x>5</x>
     <y>35</y>
   </widget>
-  <widget type="textupdate" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <background_color>
       <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
     </background_color>
     <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_width>0</border_width>
+    <border_style>0</border_style>
     <border_color>
       <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
     </border_color>
+    <font>
+      <fontdata fontName="Liberation Sans" height="13" style="0" pixels="false">Default</fontdata>
+    </font>
     <height>25</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>TextUpdate_2</name>
     <pv_name>VA:LS1_CA01:BPM_D1144:X_RD</pv_name>
+    <transparent>false</transparent>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>60</width>
     <x>210</x>
     <y>35</y>
   </widget>
-  <widget type="textupdate" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
     <background_color>
       <color red="240" green="240" blue="240" name="TEXTUPDATE_BG"/>
     </background_color>
     <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_width>0</border_width>
+    <border_style>0</border_style>
     <border_color>
       <color red="0" green="128" blue="255" name="BORDER_BLUE"/>
     </border_color>
+    <font>
+      <fontdata fontName="Liberation Sans" height="13" style="0" pixels="false">Default</fontdata>
+    </font>
     <height>25</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>TextUpdate_3</name>
     <pv_name>VA:LS1_CA01:BPM_D1144:Y_RD</pv_name>
+    <transparent>false</transparent>
+    <version>2.0.0</version>
     <vertical_alignment>1</vertical_alignment>
     <width>60</width>
     <x>275</x>
