@@ -23,7 +23,7 @@ The attribute name must be mapped for Phoebus, otherwise it will be
 missing in the generated file.
 
 Let's assume an use-case that `bitReverse` attribute of the class `Byte` (refers to
- `ByteMonitor`) needs to be correctly handled
+`ByteMonitor`) needs to be correctly handled
 on both, but the system deployed attribute map does not provide it, the use will
 have to extend it. To extend or update it, follow these steps:
 
@@ -36,6 +36,16 @@ have to extend it. To extend or update it, follow these steps:
   the extend or override if possible.
 - If `attr.toml` exists in both places, the one in the current working
   directory takes precedence.
+
+## Global Formatting
+
+`opigen` provides global formatting options through `opigen/config/color.def` and `opigen/config/font.def`.
+
+The module searches for `*.def` in the following order:
+
+1. `cwd/*.def`
+2. `~/.opigen/*.def`
+3. `<opigen-package-dir>/config/*.def`
 
 ## Development
 

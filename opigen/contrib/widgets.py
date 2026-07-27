@@ -38,7 +38,7 @@ class ProgressBar(_widgets.ProgressBar):
                  pv_name: str, minimum: float = 0, maximum: float = 100,
                  limits_from_pv: bool = False,
                  border_alarm_sensitive: bool = False):
-        super(self.__class__, self).__init__(x, y, width, height, pv_name,
+        super().__init__(x, y, width, height, pv_name,
                 minimum, maximum, limits_from_pv, border_alarm_sensitive)
         self.fill_color = ProgressBar.NORMAL_COLOR
         self.add_rule(
@@ -54,7 +54,7 @@ class ProgressBar(_widgets.ProgressBar):
 
 class ActionButton(_widgets.ActionButton):
     def __init__(self, x, y, width, height, text):
-        super(self.__class__, self).__init__(x, y, width, height, text)
+        super().__init__(x, y, width, height, text)
         self.set_font(fonts.DEFAULT)
 
 
@@ -63,7 +63,7 @@ class SlideButton(_widgets.ImageBoolButton):
     # Emulates SlideButton in Phoebus
 
     def __init__(self, x, y, width, height, pv_name, alarm_sensitive=False):
-        super(self.__class__, self).__init__(x, y, width, height, pv_name)
+        super().__init__(x, y, width, height, pv_name)
         self.on_image = ".images/toggle_on.png"
         self.off_image = ".images/toggle_off.png"
         self.transparency = True
@@ -81,7 +81,7 @@ class SlideButton(_widgets.ImageBoolButton):
 class Display(_widgets.Display):
 
     def __init__(self, width=800, height=600, name=None):
-        super(self.__class__, self).__init__(width, height)
+        super().__init__(width, height)
         #
         self.set_bg_color(DEFAULT_DISPLAY_BG)
         if name is not None:
@@ -142,7 +142,7 @@ class Display(_widgets.Display):
 class EmbeddedContainer(_widgets.EmbeddedContainer):
 
     def __init__(self, x, y, width, height, opi_file):
-        super(self.__class__, self).__init__(x, y, width, height, opi_file)
+        super().__init__(x, y, width, height, opi_file)
         #
         self.set_bg_color(DEFAULT_DISPLAY_BG)
 
@@ -161,14 +161,14 @@ class GroupingContainer(_widgets.GroupingContainer):
 
 class Label(_widgets.Label):
     def __init__(self, x, y, width, height, text):
-        super(self.__class__, self).__init__(x, y, width, height, text)
+        super().__init__(x, y, width, height, text)
         self.set_font(fonts.DEFAULT)
 
 
 class TextUpdate(_widgets.TextUpdate):
 
     def __init__(self, x, y, width, height, pv_name, alarm_sensitive=True):
-        super(self.__class__, self).__init__(x, y, width, height, pv_name)
+        super().__init__(x, y, width, height, pv_name)
         #
         self.set_bg_color(DEFAULT_TEXTUPDATE_BG)
         self.set_border(
@@ -179,7 +179,7 @@ class TextUpdate(_widgets.TextUpdate):
 class TextEntry(_widgets.TextEntry):
 
     def __init__(self, x, y, width, height, pv_name, border_alarm_sensitive: bool = True):
-        super(self.__class__, self).__init__(x, y, width, height, pv_name)
+        super().__init__(x, y, width, height, pv_name)
         #
         self.set_bg_color(DEFAULT_TEXTENTRY_BG)
         self.set_font(fonts.DEFAULT)
@@ -190,7 +190,7 @@ class TextEntry(_widgets.TextEntry):
 class Spinner(_widgets.Spinner):
 
     def __init__(self, x, y, width, height, pv_name):
-        super(self.__class__, self).__init__(x, y, width, height, pv_name)
+        super().__init__(x, y, width, height, pv_name)
         #
         self.set_bg_color(DEFAULT_TEXTENTRY_BG)
         self.set_font(fonts.DEFAULT)
@@ -267,7 +267,7 @@ class Arrow(_widgets.Polygon):
         Examples:
         >>> arrow = Arrow(300, 500, 100, 4, head_fraction=0.25, angle1=20, angle2=80)
         """
-        super(self.__class__, self).__init__(x - length, y, length, thickness)
+        super().__init__(x - length, y, length, thickness)
 
         head_fraction = kws.get('head_fraction', 0.2)
         angle1 = kws.get('angle1', 30)
@@ -375,7 +375,7 @@ class Rectangle(_widgets.Rectangle):
 
     def __init__(self, x: int, y: int, width: int, height: int,
                  color: Color = DEFAULT_BORDER_COLOR):
-        super(self.__class__, self).__init__(x, y, width, height)
+        super().__init__(x, y, width, height)
 
         self.set_color(color)
 

@@ -2,23 +2,14 @@
 Module containing widgets to describe opi files.  An opi has a root widget
 of type Display.  To create the opi, add widgets as children of this widget.
 """
+
 from collections import namedtuple
 from copy import deepcopy
-from typing import (
-    Literal,
-    Optional,
-    Union
-)
+from typing import Literal, Optional, Union
 
-from opigen.config import (
-    get_attr_conf,
-    get_ver_conf
-)
+from opigen.config import get_attr_conf, get_ver_conf
 
-from . import (
-    actions,
-    scalings
-)
+from . import actions, scalings
 
 from .borders import Border
 from .colors import Color
@@ -37,26 +28,25 @@ from .enums import (
     ResizeBehaviour_MAP,
     RotationStep,
     TraceType,
-    VAlign
+    VAlign,
 )
 
 from .table_columns import Column
 
 ATTR_MAP = get_attr_conf()
 VER_CONF = get_ver_conf()
-DEFAULT_VER = VER_CONF['Default']
+DEFAULT_VER = VER_CONF["Default"]
 
 WidgetGeometry = namedtuple(
-    'WidgetGeometry',
-    'x, y, width, height, topLeft, topRight, bottomLeft, bottomRight')
+    "WidgetGeometry", "x, y, width, height, topLeft, topRight, bottomLeft, bottomRight"
+)
 
 # tab direction map (BOY to BOB)
 TAB_HORIZONTAL_MAP = {True: 0, False: 1}
 
 
 def _get_widget_version(name: str):
-    """Return the version string for the widget.
-    """
+    """Return the version string for the widget."""
     return VER_CONF.get(name, DEFAULT_VER)
 
 
@@ -71,6 +61,7 @@ class Widget:
         height - the height of the widget in pixels
         name - a name for the widget within the display
     """
+
     CNT = {}
 
     def __init__(self, type_id, x, y, width, height, name=None):
@@ -97,7 +88,7 @@ class Widget:
 
     def __setattr__(self, name, value):
         _cls_name = self.__class__.__name__
-        _conf_default = ATTR_MAP['DEFAULT']
+        _conf_default = ATTR_MAP["DEFAULT"]
         if _cls_name in ATTR_MAP:
             _conf = {k: v for k, v in _conf_default.items()}
             _conf_ = ATTR_MAP.get(_cls_name)
@@ -107,15 +98,14 @@ class Widget:
 
         if name in _conf:
             super().__setattr__(name, value)
-            if name == 'format_type':
-                super().__setattr__(f"phoebus_{_conf[name]}",
-                                    FormatType_MAP[value])
-            elif _cls_name == 'EmbeddedContainer' and name == 'resize_behaviour':
-                super().__setattr__(f"phoebus_{_conf[name]}",
-                                    ResizeBehaviour_MAP[value])
-            elif _cls_name == 'TabbedContainer' and name == 'horizontal_tabs':
-                super().__setattr__(f"phoebus_{_conf[name]}",
-                                    TAB_HORIZONTAL_MAP[value])
+            if name == "format_type":
+                super().__setattr__(f"phoebus_{_conf[name]}", FormatType_MAP[value])
+            elif _cls_name == "EmbeddedContainer" and name == "resize_behaviour":
+                super().__setattr__(
+                    f"phoebus_{_conf[name]}", ResizeBehaviour_MAP[value]
+                )
+            elif _cls_name == "TabbedContainer" and name == "horizontal_tabs":
+                super().__setattr__(f"phoebus_{_conf[name]}", TAB_HORIZONTAL_MAP[value])
             else:
                 super().__setattr__(f"phoebus_{_conf[name]}", value)
         else:
@@ -144,8 +134,7 @@ class Widget:
             return self.get_type_id()  # css
 
     def get_parent(self):
-        """Get the parent widget of this widget.
-        """
+        """Get the parent widget of this widget."""
         return self._parent
 
     def set_parent(self, parent):
@@ -175,8 +164,7 @@ class Widget:
             self.add_child(child)
 
     def get_children(self):
-        """Get all child widgets.
-        """
+        """Get all child widgets."""
         return self._children
 
     def set_bg_color(self, color):
@@ -224,8 +212,7 @@ class Widget:
         self.phoebus_rules.append(rule)
 
     def reset_rules(self):
-        """Purge all defined rules if any.
-        """
+        """Purge all defined rules if any."""
         self.rules = []
         self.phoebus_rules = []
 
@@ -245,8 +232,7 @@ class Widget:
             height (bool): True if widget height is scalable
             keep_wh_ratio (bool):
         """
-        self.scale_options = scalings.ScaleOptions(width, height,
-                                                   keep_wh_ratio)
+        self.scale_options = scalings.ScaleOptions(width, height, keep_wh_ratio)
 
     def get_resources(self):
         """Return a dict of required resources that need to be distributed with the generated OPI.
@@ -255,17 +241,16 @@ class Widget:
         return {}
 
     def geometry(self):
-        """Return a namedTuple of WidgetGeometry.
-        """
+        """Return a namedTuple of WidgetGeometry."""
         x, y, width, height = self.x, self.y, self.width, self.height
         top_left, top_right = (x, y), (x + width, y)
         bottom_left, bottom_right = (x, y + height), (x + width, y + height)
-        return WidgetGeometry(x, y, width, height, top_left, top_right,
-                              bottom_left, bottom_right)
+        return WidgetGeometry(
+            x, y, width, height, top_left, top_right, bottom_left, bottom_right
+        )
 
     def clone(self):
-        """ Return a copy of this widget.
-        """
+        """Return a copy of this widget."""
         return deepcopy(self)
 
 
@@ -275,21 +260,13 @@ class ActionWidget(Widget):
     """
 
     # No ID, designed to be subclassed only
-    def __init__(self,
-                 type_id,
-                 x,
-                 y,
-                 width,
-                 height,
-                 hook_first=True,
-                 hook_all=False):
+    def __init__(self, type_id, x, y, width, height, hook_first=True, hook_all=False):
         super(ActionWidget, self).__init__(type_id, x, y, width, height)
         self.actions = actions.ActionsModel(hook_first, hook_all)
         self.phoebus_actions = self.actions
 
     def execute_as_one(self, execute_all: bool = True):
-        """Execute all action in one click or not.
-        """
+        """Execute all action in one click or not."""
         self.actions.set_hook_all(execute_all)
 
     def add_action(self, action):
@@ -304,22 +281,21 @@ class ActionWidget(Widget):
     def add_write_pv(self, pv, value, description=""):
         self.actions.add_action(actions.WritePv(pv, value, description))
 
-    def add_shell_command(self,
-                          command,
-                          description="",
-                          directory="$(opi.dir)"):
+    def add_shell_command(self, command, description="", directory="$(opi.dir)"):
         # directory does not apply to phoebus
-        self.actions.add_action(
-            actions.ExecuteCommand(command, description, directory))
+        self.actions.add_action(actions.ExecuteCommand(command, description, directory))
 
-    def add_open_opi(self,
-                     path,
-                     mode=actions.OpenOpi.STANDALONE,
-                     description=None,
-                     macros=None,
-                     parent_macros=True):
+    def add_open_opi(
+        self,
+        path,
+        mode=actions.OpenOpi.STANDALONE,
+        description=None,
+        macros=None,
+        parent_macros=True,
+    ):
         self.actions.add_action(
-            actions.OpenOpi(path, mode, description, macros, parent_macros))
+            actions.OpenOpi(path, mode, description, macros, parent_macros)
+        )
 
     def add_open_file(self, path: str, description: str = "Open File"):
         self.actions.add_action(actions.OpenFile(path, description))
@@ -332,8 +308,7 @@ class ActionWidget(Widget):
         if style == BasicStyle.CLASSIC:
             self.alarm_pulsing = False
             self.backcolor_alarm_sensitive = False
-            self.set_bg_color(
-                Color((218, 218, 218), 'ControlAndButtons Background'))
+            self.set_bg_color(Color((218, 218, 218), "ControlAndButtons Background"))
             self.style = style
         else:  # NATIVE
             self.style = style
@@ -344,16 +319,13 @@ class Display(Widget):
     Display widget.  This is the root widget for any opi.
     """
 
-    TYPE_ID = 'org.csstudio.opibuilder.Display'
+    TYPE_ID = "org.csstudio.opibuilder.Display"
     TYPE = None
 
     def __init__(self, width=800, height=600):
-        super(Display, self).__init__(Display.TYPE_ID,
-                                      0,
-                                      0,
-                                      width,
-                                      height,
-                                      name='display')
+        super(Display, self).__init__(
+            Display.TYPE_ID, 0, 0, width, height, name="display"
+        )
         self.auto_zoom_to_fit_all = False
         self.show_grid = True
 
@@ -369,21 +341,32 @@ class Display(Widget):
             autoscale (bool): Autoscale child widgets
         """
         self.auto_scale_widgets = scalings.DisplayScaleOptions(
-            min_width, min_height, autoscale)
+            min_width, min_height, autoscale
+        )
 
 
 class LinearMeter(ActionWidget):
     TYPE_ID = "To-Be-Supported-for-BOY"
     TYPE = "linearmeter"
 
-    def __init__(self, x, y, width, height, pv_name,
-                 minimum: float = 0, maximum: float = 100,
-                 limits_from_pv: bool = False,
-                 border_alarm_sensitive: bool = False,
-                 level_lolo: float = 10.0, level_low: float = 20.0,
-                 level_high: float = 80.0, level_hihi: float = 90.0,
-                 enable_gradient: bool = False,
-                 highlight_active_region: bool = True):
+    def __init__(
+        self,
+        x,
+        y,
+        width,
+        height,
+        pv_name,
+        minimum: float = 0,
+        maximum: float = 100,
+        limits_from_pv: bool = False,
+        border_alarm_sensitive: bool = False,
+        level_lolo: float = 10.0,
+        level_low: float = 20.0,
+        level_high: float = 80.0,
+        level_hihi: float = 90.0,
+        enable_gradient: bool = False,
+        highlight_active_region: bool = True,
+    ):
         super(LinearMeter, self).__init__(LinearMeter.TYPE_ID, x, y, width, height)
         # dict, {attr_name: (is_color_attr?, attr_value)}
         self.phoebus_linear_meter_colors = self.linear_meter_colors = {}
@@ -414,22 +397,21 @@ class LinearMeter(ActionWidget):
 
     @highlight_active_region.setter
     def highlight_active_region(self, f: bool):
-        self.linear_meter_colors[
-            "is_highlighting_of_active_regions_enabled"] = (False, f)
+        self.linear_meter_colors["is_highlighting_of_active_regions_enabled"] = (
+            False,
+            f,
+        )
 
     def set_normal_color(self, color: Color):
-        """Set color for normal status.
-        """
+        """Set color for normal status."""
         self.linear_meter_colors["normal_status_color"] = (True, color)
 
     def set_minor_color(self, color: Color):
-        """Set color for minor status.
-        """
+        """Set color for minor status."""
         self.linear_meter_colors["minor_warning_color"] = (True, color)
 
     def set_major_color(self, color: Color):
-        """Set color for major status.
-        """
+        """Set color for major status."""
         self.linear_meter_colors["major_warning_color"] = (True, color)
 
     def set_knob_color(self, color: Color):
@@ -443,10 +425,18 @@ class ScaledSlider(ActionWidget):
     TYPE_ID = "To-Be-Supported-for-BOY"
     TYPE = "scaledslider"
 
-    def __init__(self, x, y, width, height, pv_name,
-                 minimum: float = 0, maximum: float = 100,
-                 limits_from_pv: bool = False,
-                 border_alarm_sensitive: bool = False):
+    def __init__(
+        self,
+        x,
+        y,
+        width,
+        height,
+        pv_name,
+        minimum: float = 0,
+        maximum: float = 100,
+        limits_from_pv: bool = False,
+        border_alarm_sensitive: bool = False,
+    ):
         super(ScaledSlider, self).__init__(ScaledSlider.TYPE_ID, x, y, width, height)
         self.pv_name = pv_name
         self.minimum = self.phoebus_minimum = minimum
@@ -461,10 +451,18 @@ class ProgressBar(ActionWidget):
     TYPE_ID = "To-Be-Supported-for-BOY"
     TYPE = "progressbar"
 
-    def __init__(self, x, y, width, height, pv_name,
-                 minimum: float = 0, maximum: float = 100,
-                 limits_from_pv: bool = False,
-                 border_alarm_sensitive: bool = False):
+    def __init__(
+        self,
+        x,
+        y,
+        width,
+        height,
+        pv_name,
+        minimum: float = 0,
+        maximum: float = 100,
+        limits_from_pv: bool = False,
+        border_alarm_sensitive: bool = False,
+    ):
         super(ProgressBar, self).__init__(ProgressBar.TYPE_ID, x, y, width, height)
         self.pv_name = pv_name
         self.minimum = self.phoebus_minimum = minimum
@@ -485,32 +483,27 @@ class FileSelector(ActionWidget):
 
 
 class Rectangle(ActionWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.Rectangle'
-    TYPE = 'rectangle'  # phoebus
+    TYPE_ID = "org.csstudio.opibuilder.widgets.Rectangle"
+    TYPE = "rectangle"  # phoebus
 
     def __init__(self, x, y, width, height):
         super(Rectangle, self).__init__(Rectangle.TYPE_ID, x, y, width, height)
 
     def set_line_color(self, color: Union[Color, None] = None):
-        """ Set the line color.
-        """
+        """Set the line color."""
         if color is None:
-            color = Color((189, 195, 199), 'Silver')
+            color = Color((189, 195, 199), "Silver")
         self.line_color = color
 
     def set_area_color(self, color: Union[Color, None] = None):
-        """ Set the area (background) color.
-        """
+        """Set the area (background) color."""
         if color is None:
-            color = Color((218, 218, 218),
-                          'ControlAndButtons Background')
+            color = Color((218, 218, 218), "ControlAndButtons Background")
         self.transparent = False
         self.background_color = color
 
 
 class Polygon(ActionWidget):
-
     TYPE_ID = "POLYGON-TO-BE-SUPPORTED-BOY"
     TYPE = "polygon"
 
@@ -521,52 +514,58 @@ class Polygon(ActionWidget):
         self.set_area_color()
 
     def add_point(self, x: int, y: int):
-        """ Add a point to the polygon. The point (x, y) is relative to the polygon
+        """Add a point to the polygon. The point (x, y) is relative to the polygon
         rectangle area defined by (x0, y0, width, height).
         """
         self.points.append((x, y))
 
     def add_points(self, *points):
-        """ Pass points in the form of (x1, y1), (x2, y2), ...
-        """
+        """Pass points in the form of (x1, y1), (x2, y2), ..."""
         for x, y in points:
             self.points.append((x, y))
 
     def set_line_color(self, color: Union[Color, None] = None):
-        """ Set the line color.
-        """
+        """Set the line color."""
         if color is None:
-            color = Color((189, 195, 199), 'Silver')
+            color = Color((189, 195, 199), "Silver")
         self.line_color = color
 
     def set_area_color(self, color: Union[Color, None] = None):
-        """ Set the area (background) color.
-        """
+        """Set the area (background) color."""
         if color is None:
-            color = Color((218, 218, 218),
-                          'ControlAndButtons Background')
+            color = Color((218, 218, 218), "ControlAndButtons Background")
         self.transparent = False
         self.background_color = color
 
 
 class Line(Widget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.polyline"
+    TYPE = "polyline"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.polyline'
-    TYPE = 'polyline'
-
-    def __init__(self, x0: int, y0: int, x1: int, y1: int,
-                 line_width: int = 1, line_style: Union[int, str] = "solid"):
-        """ Widget x,y location is calculated to be the top-left corner of
+    def __init__(
+        self,
+        x0: int,
+        y0: int,
+        x1: int,
+        y1: int,
+        line_width: int = 1,
+        line_style: Union[int, str] = "solid",
+    ):
+        """Widget x,y location is calculated to be the top-left corner of
         rectangle defined by the diagonal from `(x0, y0)` to `(x1, y1)`.
         The width and height are the lengths of the sides.
 
         The point `(x, y)` is measured in the global frame.
         """
-        super(Line, self).__init__(Line.TYPE_ID, x=min(x0, x1), y=min(y0, y1),
-                                   width=abs(x0 - x1) + 1, height=abs(y0 - y1) + 1)
+        super(Line, self).__init__(
+            Line.TYPE_ID,
+            x=min(x0, x1),
+            y=min(y0, y1),
+            width=abs(x0 - x1) + 1,
+            height=abs(y0 - y1) + 1,
+        )
         self.points = [(x0, y0), (x1, y1)]
-        self.phoebus_points = [(x0 - self.x, y0 - self.y),
-                               (x1 - self.x, y1 - self.y)]
+        self.phoebus_points = [(x0 - self.x, y0 - self.y), (x1 - self.x, y1 - self.y)]
         self.line_width = line_width
         if isinstance(line_style, str):
             line_style = str2LineStyle(line_style)
@@ -574,87 +573,243 @@ class Line(Widget):
         self.set_line_color()
 
     def add_point(self, x: int, y: int):
-        """ Add a point with x, y coordinate, the same as `append_point`."""
+        """Add a point with x, y coordinate, the same as `append_point`."""
         self.append_point(x, y)
 
     def append_point(self, x: int, y: int):
-        """ Append a point with x, y coordinate to the existing list of points.
-        """
+        """Append a point with x, y coordinate to the existing list of points."""
         self.points.append((x, y))
         self.phoebus_points.append((x - self.x, y - self.y))
 
     def insert_point(self, index: int, x: int, y: int):
-        """ Insert a point with x, y coordinate.
-        """
+        """Insert a point with x, y coordinate."""
         self.points.insert(index, (x, y))
         self.phoebus_points.insert(index, (x - self.x, y - self.y))
 
     def set_line_color(self, c: Color = None):
-        """ Set the line color."""
+        """Set the line color."""
         if c is None:
-            c = Color((189, 195, 199), 'Silver')
+            c = Color((189, 195, 199), "Silver")
         # background_color
         self.set_bg_color(c)
 
     def set_arrow_style(self, s: str):
-        """ Set arrows style: none, from, to, both.
-        """
+        """Set arrows style: none, from, to, both."""
         self.phoebus_arrows = str2LineArrowStyle(s)
 
     def set_arrow_length(self, i: int):
-        """ Set arrow length if arrow style is not none.
-        """
+        """Set arrow length if arrow style is not none."""
         self.phoebus_arrow_length = i
 
 
+def _parse_halignment(alignment):
+    if isinstance(alignment, str):
+        match alignment.lower().strip():
+            case "left":
+                return HAlign.LEFT
+            case "right":
+                return HAlign.RIGHT
+            case "center":
+                return HAlign.CENTER
+            case _:
+                raise ValueError("horizontal_alignment must be left, right, or center")
+    if alignment in (HAlign.LEFT, HAlign.CENTER, HAlign.RIGHT):
+        return alignment
+    raise TypeError("Error: horizontal_alignment must be of type String or HAlign")
+
+
+def _parse_valignment(alignment):
+    if isinstance(alignment, str):
+        match alignment.lower().strip():
+            case "top":
+                return VAlign.TOP
+            case "bottom":
+                return VAlign.BOTTOM
+            case "middle":
+                return VAlign.MIDDLE
+            case _:
+                raise ValueError("Error: alignment must be top, bottom, or middle")
+    if alignment in (VAlign.TOP, VAlign.MIDDLE, VAlign.BOTTOM):
+        return alignment
+    raise TypeError("Error: vertical_alignment must be of type String or VAlign")
+
+
 class Label(Widget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.Label"
+    TYPE = "label"  # phoebus
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.Label'
-    TYPE = 'label'  # phoebus
-
-    def __init__(self, x, y, width, height, text):
-        super(Label, self).__init__(Label.TYPE_ID, x, y, width, height)
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        text: str,
+        horizontal_alignment: Optional[Union[str, HAlign]] = None,
+        vertical_alignment: Optional[Union[str, VAlign]] = None,
+    ):
+        super().__init__(Label.TYPE_ID, x, y, width, height)
         self.text = text
-        self.horizontal_alignment = HAlign.LEFT
-        self.vertical_alignment = VAlign.MIDDLE
+        if horizontal_alignment is None:
+            _ha = HAlign.LEFT
+        else:
+            _ha = _parse_halignment(horizontal_alignment)
+        self.__dict__['_horizontal_alignment'] = _ha
+        self.__dict__['horizontal_alignment'] = _ha
+        self.__dict__['phoebus_horizontal_alignment'] = _ha
+        if vertical_alignment is None:
+            _va = VAlign.MIDDLE
+        else:
+            _va = _parse_valignment(vertical_alignment)
+        self.__dict__['_vertical_alignment'] = _va
+        self.__dict__['vertical_alignment'] = _va
+        self.__dict__['phoebus_vertical_alignment'] = _va
 
-    def rotate(self, deg: Literal[RotationStep.D0, RotationStep.D90, RotationStep.D180, RotationStep.D_90]):
+    def rotate(
+        self,
+        deg: Literal[
+            RotationStep.D0, RotationStep.D90, RotationStep.D180, RotationStep.D_90
+        ],
+    ):
         self.rotation_step = deg.value
+
+    @property
+    def horizontal_alignment(self):
+        return self.__dict__['_horizontal_alignment']
+
+    @horizontal_alignment.setter
+    def horizontal_alignment(self, alignment: Union[str, HAlign]):
+        value = _parse_halignment(alignment)
+        self.__dict__['_horizontal_alignment'] = value
+        self.__dict__['horizontal_alignment'] = value
+        self.__dict__['phoebus_horizontal_alignment'] = value
+
+    @property
+    def vertical_alignment(self):
+        return self.__dict__['_vertical_alignment']
+
+    @vertical_alignment.setter
+    def vertical_alignment(self, alignment: Union[str, VAlign]):
+        value = _parse_valignment(alignment)
+        self.__dict__['_vertical_alignment'] = value
+        self.__dict__['vertical_alignment'] = value
+        self.__dict__['phoebus_vertical_alignment'] = value
 
 
 class TextUpdate(Widget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.TextUpdate"
+    TYPE = "textupdate"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.TextUpdate'
-    TYPE = 'textupdate'
-
-    def __init__(self, x, y, width, height, pv):
-        super(TextUpdate, self).__init__(TextUpdate.TYPE_ID, x, y, width,
-                                         height)
-
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        pv: str,
+        horizontal_alignment: Optional[Union[str, HAlign]] = None,
+        vertical_alignment: Optional[Union[str, VAlign]] = None,
+    ):
+        super().__init__(TextUpdate.TYPE_ID, x, y, width, height)
         self.pv_name = pv
-        self.horizontal_alignment = HAlign.CENTER
-        self.vertical_alignment = VAlign.MIDDLE
+        if horizontal_alignment is None:
+            _ha = HAlign.CENTER
+        else:
+            _ha = _parse_halignment(horizontal_alignment)
+        self.__dict__['_horizontal_alignment'] = _ha
+        self.__dict__['horizontal_alignment'] = _ha
+        self.__dict__['phoebus_horizontal_alignment'] = _ha
+        if vertical_alignment is None:
+            _va = VAlign.MIDDLE
+        else:
+            _va = _parse_valignment(vertical_alignment)
+        self.__dict__['_vertical_alignment'] = _va
+        self.__dict__['vertical_alignment'] = _va
+        self.__dict__['phoebus_vertical_alignment'] = _va
+
+    @property
+    def horizontal_alignment(self):
+        return self.__dict__['_horizontal_alignment']
+
+    @horizontal_alignment.setter
+    def horizontal_alignment(self, alignment: Union[str, HAlign]):
+        value = _parse_halignment(alignment)
+        self.__dict__['_horizontal_alignment'] = value
+        self.__dict__['horizontal_alignment'] = value
+        self.__dict__['phoebus_horizontal_alignment'] = value
+
+    @property
+    def vertical_alignment(self):
+        return self.__dict__['_vertical_alignment']
+
+    @vertical_alignment.setter
+    def vertical_alignment(self, alignment: Union[str, VAlign]):
+        value = _parse_valignment(alignment)
+        self.__dict__['_vertical_alignment'] = value
+        self.__dict__['vertical_alignment'] = value
+        self.__dict__['phoebus_vertical_alignment'] = value
 
 
 class TextEntry(Widget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.TextInput"
+    TYPE = "textentry"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.TextInput'
-    TYPE = 'textentry'
-
-    def __init__(self, x, y, width, height, pv, style=None):
-        super(TextEntry, self).__init__(TextEntry.TYPE_ID, x, y, width, height)
-
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        pv: str,
+        horizontal_alignment: Optional[Union[str, HAlign]] = None,
+        vertical_alignment: Optional[Union[str, VAlign]] = None,
+        style=None,
+    ) -> None:
+        super().__init__(TextEntry.TYPE_ID, x, y, width, height)
         self.pv_name = pv
-        self.horizontal_alignment = HAlign.LEFT
-        self.vertical_alignment = VAlign.MIDDLE
-        #
+        if horizontal_alignment is None:
+            _ha = HAlign.LEFT
+        else:
+            _ha = _parse_halignment(horizontal_alignment)
+        self.__dict__['_horizontal_alignment'] = _ha
+        self.__dict__['horizontal_alignment'] = _ha
+        self.__dict__['phoebus_horizontal_alignment'] = _ha
+        if vertical_alignment is None:
+            _va = VAlign.MIDDLE
+        else:
+            _va = _parse_valignment(vertical_alignment)
+        self.__dict__['_vertical_alignment'] = _va
+        self.__dict__['vertical_alignment'] = _va
+        self.__dict__['phoebus_vertical_alignment'] = _va
         if style is not None:
             self.set_basic_style(style)
 
-class Spinner(Widget):
+    @property
+    def horizontal_alignment(self):
+        return self.__dict__['_horizontal_alignment']
 
+    @horizontal_alignment.setter
+    def horizontal_alignment(self, alignment: Union[str, HAlign]):
+        value = _parse_halignment(alignment)
+        self.__dict__['_horizontal_alignment'] = value
+        self.__dict__['horizontal_alignment'] = value
+        self.__dict__['phoebus_horizontal_alignment'] = value
+
+    @property
+    def vertical_alignment(self):
+        return self.__dict__['_vertical_alignment']
+
+    @vertical_alignment.setter
+    def vertical_alignment(self, alignment: Union[str, VAlign]):
+        value = _parse_valignment(alignment)
+        self.__dict__['_vertical_alignment'] = value
+        self.__dict__['vertical_alignment'] = value
+        self.__dict__['phoebus_vertical_alignment'] = value
+
+
+class Spinner(Widget):
     TYPE_ID = "TO-Be-Supported-BOY"
-    TYPE = 'spinner'
+    TYPE = "spinner"
 
     def __init__(self, x, y, width, height, pv_name: str):
         super(Spinner, self).__init__(Spinner.TYPE_ID, x, y, width, height)
@@ -662,25 +817,25 @@ class Spinner(Widget):
 
 
 class GroupingContainer(Widget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.groupingContainer"
+    TYPE = "group"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.groupingContainer'
-    TYPE = 'group'
-
-    def __init__(self, x, y, width, height, name=''):
-        super(GroupingContainer, self).__init__(GroupingContainer.TYPE_ID, x,
-                                                y, width, height, name)
+    def __init__(self, x, y, width, height, name=""):
+        super(GroupingContainer, self).__init__(
+            GroupingContainer.TYPE_ID, x, y, width, height, name
+        )
         self.lock_children = True
         self.transparent = True  # transparent background
 
 
 class TabbedContainer(Widget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.tab'
-    TYPE = 'tabs'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.tab"
+    TYPE = "tabs"
 
     def __init__(self, x, y, width, height):
-        super(TabbedContainer, self).__init__(TabbedContainer.TYPE_ID, x, y,
-                                              width, height)
+        super(TabbedContainer, self).__init__(
+            TabbedContainer.TYPE_ID, x, y, width, height
+        )
         self.tab_count = 0
         self.tabs = []
         self.phoebus_tabs = self.tabs
@@ -705,8 +860,7 @@ class TabbedContainer(Widget):
         if widget is not None:
             _grp.add_child(widget)
 
-        _grp.set_border(
-            Border(BorderStyle.NONE, 0, Color((255, 255, 255)), False))
+        _grp.set_border(Border(BorderStyle.NONE, 0, Color((255, 255, 255)), False))
         _grp.name = name
 
         self.tabs.append((name, _grp, background_color, foreground_color))
@@ -722,41 +876,34 @@ class TabbedContainer(Widget):
         raise ValueError(f"Error! {tab_name} not found in available tabs.")
 
     def set_font(self, font):
-        """Set font for each tab. Call this method after added all tabs (only for BOY).
-        """
+        """Set font for each tab. Call this method after added all tabs (only for BOY)."""
         self.phoebus_font = font
         for i in range(self.tab_count):
             setattr(self, f"tab_{i}_font", font)
 
 
 class EmbeddedContainer(Widget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.linkingContainer'
-    TYPE = 'embedded'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.linkingContainer"
+    TYPE = "embedded"
 
     def __init__(self, x, y, width, height, opi_file):
-        super(EmbeddedContainer, self).__init__(EmbeddedContainer.TYPE_ID, x,
-                                                y, width, height)
+        super(EmbeddedContainer, self).__init__(
+            EmbeddedContainer.TYPE_ID, x, y, width, height
+        )
         self.opi_file = opi_file
         self.resize_behaviour = ResizeBehaviour.CROP
 
 
 class ActionButton(ActionWidget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.ActionButton"
+    TYPE = "action_button"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.ActionButton'
-    TYPE = 'action_button'
-
-    def __init__(self,
-                 x,
-                 y,
-                 width,
-                 height,
-                 text,
-                 style=None,
-                 hook_first=True,
-                 hook_all=False):
-        super(ActionButton, self).__init__(ActionButton.TYPE_ID, x, y, width,
-                                           height, hook_first, hook_all)
+    def __init__(
+        self, x, y, width, height, text, style=None, hook_first=True, hook_all=False
+    ):
+        super(ActionButton, self).__init__(
+            ActionButton.TYPE_ID, x, y, width, height, hook_first, hook_all
+        )
 
         self.text = text
         if style is not None:
@@ -765,20 +912,17 @@ class ActionButton(ActionWidget):
 
 
 class MenuButton(ActionWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.MenuButton'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.MenuButton"
 
     def __init__(self, x, y, width, height, text):
-        super(MenuButton, self).__init__(MenuButton.TYPE_ID, x, y, width,
-                                         height)
+        super(MenuButton, self).__init__(MenuButton.TYPE_ID, x, y, width, height)
 
         self.label = text
 
 
 class CheckBox(ActionWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.checkbox'
-    TYPE = 'checkbox'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.checkbox"
+    TYPE = "checkbox"
 
     def __init__(self, x, y, width, height, text, pv_name):
         super(CheckBox, self).__init__(CheckBox.TYPE_ID, x, y, width, height)
@@ -788,13 +932,11 @@ class CheckBox(ActionWidget):
 
 
 class ToggleButton(ActionWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.BoolButton'
-    TYPE = 'bool_button'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.BoolButton"
+    TYPE = "bool_button"
 
     def __init__(self, x, y, width, height, on_text, off_text, pv_name=None):
-        super(ToggleButton, self).__init__(ToggleButton.TYPE_ID, x, y, width,
-                                           height)
+        super(ToggleButton, self).__init__(ToggleButton.TYPE_ID, x, y, width, height)
 
         if pv_name is not None:
             self.pv_name = pv_name
@@ -819,9 +961,8 @@ class ToggleButton(ActionWidget):
 
 
 class Led(Widget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.LED'
-    TYPE = 'led'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.LED"
+    TYPE = "led"
 
     def __init__(self, x, y, width, height, pv):
         super(Led, self).__init__(Led.TYPE_ID, x, y, width, height)
@@ -829,9 +970,8 @@ class Led(Widget):
 
 
 class MultiStateLed(ActionWidget):
-
     TYPE_ID = "To-Be-Supported-for-BOY-IF-APPLICABLE"
-    TYPE = 'multi_state_led'
+    TYPE = "multi_state_led"
 
     DEFAULT_COLORS = {
         # 0: dark green: OFF
@@ -839,7 +979,7 @@ class MultiStateLed(ActionWidget):
         # 1: green: ON
         1: Color((0, 255, 0), name="ON"),
         # -1: pink, Err (fallback)
-        -1: Color((255, 0, 255))
+        -1: Color((255, 0, 255)),
     }
 
     def __init__(self, x, y, width, height, pv):
@@ -854,8 +994,7 @@ class MultiStateLed(ActionWidget):
         self.phoebus_states = []
 
     def add_state(self, value: int, label: str, color: Color):
-        """ Add a new state.
-        """
+        """Add a new state."""
         self.states.append((value, label, color))
         self.phoebus_states.append((value, label, color))
 
@@ -878,17 +1017,15 @@ class MultiStateLed(ActionWidget):
             return Color((10, 0, b), name=f"State {i + 1}")
 
     def auto_add_states(self, n: int):
-        """ Automatically add *n* states, by default naming conventions.
-        """
+        """Automatically add *n* states, by default naming conventions."""
         for i in range(n):
             color = self._get_state_color(i, n)
             self.add_state(i, f"State {i + 1}", color)
 
 
 class Byte(Widget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.bytemonitor'
-    TYPE = 'byte_monitor'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.bytemonitor"
+    TYPE = "byte_monitor"
 
     def __init__(self, x, y, width, height, pv, bits, start_bit=None):
         super(Byte, self).__init__(Byte.TYPE_ID, x, y, width, height)
@@ -904,9 +1041,8 @@ class Byte(Widget):
 
 
 class Image(Widget):
-
-    TYPE_ID = 'TO-BE-SUPPORTED'
-    TYPE = 'picture'
+    TYPE_ID = "TO-BE-SUPPORTED"
+    TYPE = "picture"
 
     def __init__(self, x: int, y: int, width: int, height: int, file: str):
         super(Image, self).__init__(Image.TYPE_ID, x, y, width, height)
@@ -915,18 +1051,20 @@ class Image(Widget):
 
 
 class Symbol(ActionWidget):
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.edm.symbolwidget'
-    TYPE = 'symbol'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.edm.symbolwidget"
+    TYPE = "symbol"
 
-    def __init__(self,
-                 x,
-                 y,
-                 width,
-                 height,
-                 pv_name,
-                 image_file: str = None,
-                 initial_index: int = 0,
-                 border_alarm_sensitive: bool = False):
+    def __init__(
+        self,
+        x,
+        y,
+        width,
+        height,
+        pv_name,
+        image_file: str = None,
+        initial_index: int = 0,
+        border_alarm_sensitive: bool = False,
+    ):
         super(Symbol, self).__init__(Symbol.TYPE_ID, x, y, width, height)
         self.pv_name = pv_name
         self.symbols = []
@@ -937,8 +1075,7 @@ class Symbol(ActionWidget):
         self.border_alarm_sensitive = border_alarm_sensitive
 
     def add_symbol(self, image_file: str):
-        """Add an image file as a new symbol.
-        """
+        """Add an image file as a new symbol."""
         self.symbols.append(image_file)
         self.phoebus_symbols.append(image_file)
 
@@ -949,8 +1086,7 @@ class Symbol(ActionWidget):
 
 # Tank
 class Tank(Widget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.tank'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.tank"
 
     def __init__(self, x, y, width, height, pv):
         super(Tank, self).__init__(Tank.TYPE_ID, x, y, width, height)
@@ -959,31 +1095,24 @@ class Tank(Widget):
 
 
 class DataBrowser(Widget):
-
-    TYPE_ID = 'org.csstudio.trends.databrowser.opiwidget'
-    TYPE = 'databrowser'
+    TYPE_ID = "org.csstudio.trends.databrowser.opiwidget"
+    TYPE = "databrowser"
 
     def __init__(self, x, y, width, height, filename):
-        super(DataBrowser, self).__init__(DataBrowser.TYPE_ID, x, y, width,
-                                          height)
+        super(DataBrowser, self).__init__(DataBrowser.TYPE_ID, x, y, width, height)
         self.show_toolbar = True
         self.filename = filename
 
 
 class ImageBoolButton(ActionWidget):
+    TYPE_ID = "org.csstudio.opibuilder.widgets.ImageBoolButton"
 
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.ImageBoolButton'
-
-    def __init__(self,
-                 x,
-                 y,
-                 width,
-                 height,
-                 pv_name=None,
-                 on_image=None,
-                 off_image=None):
-        super(ImageBoolButton, self).__init__(ImageBoolButton.TYPE_ID, x, y,
-                                              width, height)
+    def __init__(
+        self, x, y, width, height, pv_name=None, on_image=None, off_image=None
+    ):
+        super(ImageBoolButton, self).__init__(
+            ImageBoolButton.TYPE_ID, x, y, width, height
+        )
         if on_image is not None:
             self.on_image = on_image
         if off_image is not None:
@@ -993,25 +1122,23 @@ class ImageBoolButton(ActionWidget):
 
 
 class SlideButton(ActionWidget):
-
-    TYPE_ID = 'TO-BE-SUPPORTED'  # not available for BOY
-    TYPE = 'slide_button'
+    TYPE_ID = "TO-BE-SUPPORTED"  # not available for BOY
+    TYPE = "slide_button"
 
     def __init__(self, x, y, width, height, pv_name=None):
-        super(SlideButton, self).__init__(SlideButton.TYPE_ID, x, y, width,
-                                          height)
+        super(SlideButton, self).__init__(SlideButton.TYPE_ID, x, y, width, height)
         if pv_name is not None:
             self.phoebus_pv_name = pv_name
-        self.phoebus_label = ''
+        self.phoebus_label = ""
 
 
 class Table(ActionWidget):
+    TYPE_ID = "TO-BE-SUPPORTED"  # not available for BOY or to be supported
+    TYPE = "table"
 
-    TYPE_ID = 'TO-BE-SUPPORTED'  # not available for BOY or to be supported
-    TYPE = 'table'
-
-    def __init__(self, x: int, y: int, width: int, height: int,
-                 pv_name: Optional[str] = None) -> None:
+    def __init__(
+        self, x: int, y: int, width: int, height: int, pv_name: Optional[str] = None
+    ) -> None:
         super(Table, self).__init__(Table.TYPE_ID, x, y, width, height)
         if pv_name is not None:
             self.phoebus_pv_name = pv_name
@@ -1028,13 +1155,11 @@ class Table(ActionWidget):
 
 
 class WebBrowser(ActionWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.webbrowser'
-    TYPE = 'webbrowser'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.webbrowser"
+    TYPE = "webbrowser"
 
     def __init__(self, x, y, width, height, url):
-        super(WebBrowser, self).__init__(WebBrowser.TYPE_ID, x, y, width,
-                                         height)
+        super(WebBrowser, self).__init__(WebBrowser.TYPE_ID, x, y, width, height)
         self.url = url
         self.phoebus_url = url
 
@@ -1072,13 +1197,14 @@ class _ChartWidget(ActionWidget):
         self.trace_count = 0
         self.axis_count = 2
 
-        self._has_xaxis = kws.get('has_xaxis', True)
+        self._has_xaxis = kws.get("has_xaxis", True)
         # Phoebus renders axes vastly different from CS-Studio, so data is
         # stored differently for it as well
         self.phoebus_axes = [
             # legend, autoscale?, min, max, grid?, visible?, color, title_font, scale_font, [if has non-temporal xaixs?]
             ["X Axis", True, 0, 100, True, True, None, None, None, self._has_xaxis],
-            ["Y Axis 1", True, 0, 100, True, True, None, None, None]]
+            ["Y Axis 1", True, 0, 100, True, True, None, None, None],
+        ]
         self.phoebus_traces = []
 
         # Sets the x-axis and first y-axis to show their grids
@@ -1098,20 +1224,29 @@ class _ChartWidget(ActionWidget):
 
         # Phoebus
         self.phoebus_axes.append(
-            [f"Y Axis {self.axis_count - 1}", True, 0, 100, True, True, None, None, None])
+            [
+                f"Y Axis {self.axis_count - 1}",
+                True,
+                0,
+                100,
+                True,
+                True,
+                None,
+                None,
+                None,
+            ]
+        )
 
         self.set_axis_grid(True, self.axis_count - 1)
 
         return self.axis_count
 
     def hide_axis(self, hidden: bool, axis=0):
-        """Hide axis or not.
-        """
+        """Hide axis or not."""
         self.phoebus_axes[axis][5] = not hidden
 
     def set_axis_font(self, type: str, font, axis=0):
-        """Set title or scale font, only support Phoebus now.
-        """
+        """Set title or scale font, only support Phoebus now."""
         if type == "title":
             self.phoebus_axes[axis][7] = font
         elif type == "scale":
@@ -1133,13 +1268,12 @@ class _ChartWidget(ActionWidget):
         setattr(self, f"axis_{axis}_maximum", maximum)
 
         # Phoebus
-        self.phoebus_axes[axis][1] = False # autoscale
+        self.phoebus_axes[axis][1] = False  # autoscale
         self.phoebus_axes[axis][2] = minimum
         self.phoebus_axes[axis][3] = maximum
 
     def auto_scale(self, on: str, axis: int):
-        """Set axis autoscale on or off.
-        """
+        """Set axis autoscale on or off."""
         is_on = on == "on"
         if axis == 0 and not self._has_xaxis:
             self.autoscale = is_on
@@ -1194,18 +1328,20 @@ class _ChartWidget(ActionWidget):
             # Phoebus
             self.phoebus_axes[axis][4] = grid_on
 
-    def add_trace(self,
-                  y_pv,
-                  x_pv=None,
-                  yerr_pv=None,
-                  legend=None,
-                  trace_type=TraceType.BARS,
-                  line_width=10,
-                  line_style=LineStyle.SOLID,
-                  point_type=PointType.NONE,
-                  point_size=10,
-                  trace_color=None,
-                  y_axis=0):
+    def add_trace(
+        self,
+        y_pv,
+        x_pv=None,
+        yerr_pv=None,
+        legend=None,
+        trace_type=TraceType.BARS,
+        line_width=10,
+        line_style=LineStyle.SOLID,
+        point_type=PointType.NONE,
+        point_size=10,
+        trace_color=None,
+        y_axis=0,
+    ):
         """Adds a trace to the graph.
 
         The trace will take the form of a bar graph. If no X PV is provided, the OPI will
@@ -1257,41 +1393,44 @@ class _ChartWidget(ActionWidget):
         self.trace_count += 1
 
         # Phoebus
-        self.phoebus_traces.append([
-            self.get_type(), legend, x_pv, y_pv, yerr_pv, trace_type, line_width,
-            line_style, point_type, point_size,
-            y_axis, trace_color
-        ])
+        self.phoebus_traces.append(
+            [
+                self.get_type(),
+                legend,
+                x_pv,
+                y_pv,
+                yerr_pv,
+                trace_type,
+                line_width,
+                line_style,
+                point_type,
+                point_size,
+                y_axis,
+                trace_color,
+            ]
+        )
 
 
 class XYPlot(_ChartWidget):
-
-    TYPE_ID = 'org.csstudio.opibuilder.widgets.xyGraph'
+    TYPE_ID = "org.csstudio.opibuilder.widgets.xyGraph"
     TYPE = "xyplot"
 
     def __init__(self, x, y, width, height, show_toolbar=False):
         self._has_xaxis = True
-        super(XYPlot, self).__init__(XYPlot.TYPE_ID,
-                                     x,
-                                     y,
-                                     width,
-                                     height,
-                                     has_xaxis=True)
+        super(XYPlot, self).__init__(
+            XYPlot.TYPE_ID, x, y, width, height, has_xaxis=True
+        )
         self.show_toolbar = show_toolbar
 
 
 class StripChart(_ChartWidget):
-
-    TYPE_ID = 'TO-BE-SUPPORTED'
-    TYPE = 'stripchart'
+    TYPE_ID = "TO-BE-SUPPORTED"
+    TYPE = "stripchart"
 
     def __init__(self, x, y, width, height, show_toolbar=False, start=None):
-        super(StripChart, self).__init__(StripChart.TYPE_ID,
-                                         x,
-                                         y,
-                                         width,
-                                         height,
-                                         has_xaxis=False)
+        super(StripChart, self).__init__(
+            StripChart.TYPE_ID, x, y, width, height, has_xaxis=False
+        )
         self.show_toolbar = show_toolbar
         # the starting time, relative to now
         if start is None:

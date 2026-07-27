@@ -109,33 +109,79 @@ def test_Display_render_sets_custom_scale_options(display, get_opi_renderer):
     assert "<auto_scale_widgets>true</auto_scale_widgets>" in output
 
 
-@pytest.mark.parametrize('widget_type,alignbit',
-                         [(widgets.TextUpdate, enums.HA_CENTER),
-                          (widgets.TextEntry, enums.HA_LEFT)])
+@pytest.mark.parametrize('widget_type,halign,valign',
+                         [(widgets.TextUpdate, enums.HA_CENTER, enums.VA_MIDDLE),
+                          (widgets.TextEntry, enums.HA_LEFT, enums.VA_MIDDLE)])
 def test_text_widgets_have_correct_attributes(display, get_opi_renderer,
-                                              widget_type, alignbit):
+                                              widget_type, halign, valign):
     tb = widget_type(10, 10, 20, 20, 'pvname')
     display.add_child(tb)
     renderer = get_opi_renderer(display)
     renderer.assemble()
     output = str(renderer)
     assert '<pv_name>pvname</pv_name>' in output
-    assert f'<horizontal_alignment>{alignbit}</horizontal_alignment>' in output
+    assert f'<horizontal_alignment>{halign}</horizontal_alignment>' in output
+    assert f'<vertical_alignment>{valign}</vertical_alignment>' in output
 
 
-@pytest.mark.parametrize('widget_type,alignbit',
-                         [(widgets.TextUpdate, enums.HA_CENTER),
-                          (widgets.TextEntry, enums.HA_LEFT)])
+@pytest.mark.parametrize('widget_type,halign,valign',
+                         [(widgets.TextUpdate, enums.HA_CENTER, enums.VA_MIDDLE),
+                          (widgets.TextEntry, enums.HA_LEFT, enums.VA_MIDDLE)])
 def test_text_widgets_have_correct_attributes_phoebus(display,
-                                                      get_bob_renderer,
-                                                      widget_type, alignbit):
+                                                       get_bob_renderer,
+                                                       widget_type, halign, valign):
     tb = widget_type(10, 10, 20, 20, 'pvname')
     display.add_child(tb)
     renderer = get_bob_renderer(display)
     renderer.assemble()
     output = str(renderer)
     assert '<pv_name>pvname</pv_name>' in output
-    assert f'<horizontal_alignment>{alignbit}</horizontal_alignment>' in output
+    assert f'<horizontal_alignment>{halign}</horizontal_alignment>' in output
+    assert f'<vertical_alignment>{valign}</vertical_alignment>' in output
+
+
+@pytest.mark.parametrize('halign,valign,exp_ha,exp_va', [
+    (None, None, enums.HA_LEFT, enums.VA_MIDDLE),
+    ('center', 'bottom', enums.HA_CENTER, enums.VA_BOTTOM),
+    (enums.HA_RIGHT, enums.VA_TOP, enums.HA_RIGHT, enums.VA_TOP),
+])
+def test_label_has_correct_alignment(display, get_opi_renderer,
+                                     halign, valign, exp_ha, exp_va):
+    kwargs = {}
+    if halign is not None:
+        kwargs['horizontal_alignment'] = halign
+    if valign is not None:
+        kwargs['vertical_alignment'] = valign
+    lbl = widgets.Label(10, 10, 100, 30, 'text', **kwargs)
+    display.add_child(lbl)
+    renderer = get_opi_renderer(display)
+    renderer.assemble()
+    output = str(renderer)
+    assert '<text>text</text>' in output
+    assert f'<horizontal_alignment>{exp_ha}</horizontal_alignment>' in output
+    assert f'<vertical_alignment>{exp_va}</vertical_alignment>' in output
+
+
+@pytest.mark.parametrize('halign,valign,exp_ha,exp_va', [
+    (None, None, enums.HA_LEFT, enums.VA_MIDDLE),
+    ('center', 'bottom', enums.HA_CENTER, enums.VA_BOTTOM),
+    (enums.HA_RIGHT, enums.VA_TOP, enums.HA_RIGHT, enums.VA_TOP),
+])
+def test_label_has_correct_alignment_phoebus(display, get_bob_renderer,
+                                             halign, valign, exp_ha, exp_va):
+    kwargs = {}
+    if halign is not None:
+        kwargs['horizontal_alignment'] = halign
+    if valign is not None:
+        kwargs['vertical_alignment'] = valign
+    lbl = widgets.Label(10, 10, 100, 30, 'text', **kwargs)
+    display.add_child(lbl)
+    renderer = get_bob_renderer(display)
+    renderer.assemble()
+    output = str(renderer)
+    assert '<text>text</text>' in output
+    assert f'<horizontal_alignment>{exp_ha}</horizontal_alignment>' in output
+    assert f'<vertical_alignment>{exp_va}</vertical_alignment>' in output
 
 
 def test_ToggleButton_has_correct_attributes(display, get_opi_renderer):
